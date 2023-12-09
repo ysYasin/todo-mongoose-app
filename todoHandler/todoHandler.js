@@ -6,7 +6,14 @@ const route = express.Router();
 const Todo = new mongoose.model("Todo", todoSchrma);
 
 //GET all the Todos
-route.get('/', (req, res) => {
+route.get('/', async (req, res) => {
+    await Todo.find({ status: "active" }).select({ date: 0, _id: 0, _v: 0 }).limit(1)//.exect()
+        .then(todos => {
+            res.status(200).json(todos)
+        })
+        .catch(err => {
+            res.status(403).json({ message: "may there was an error in server" })
+        })
 })
 
 //get todo'd by ID
@@ -90,27 +97,27 @@ route.post("/all", async (req, res) => {
 // })
 
 // findByIdAndUpdate
-route.put("/:id", async (req, res) => {
-    const id = req.params.id;
-    await Todo.findByIdAndUpdate({ _id: id }, {
-        $set: {
-            title: req.body.title,
-            description: req.body.description,
-            status: req.body.status,
-            date: req.body.date
-        }
-    }, {
-        new: true,
-        useFindAndModify: false
-    }).then((result) => {
-        res.status(200).send(result)
-    })
-        .catch(err => {
-            res.status(403).json({ message: "may there was an error in your request" })
-        })
+// route.put("/:id", async (req, res) => {
+//     const id = req.params.id;
+//     await Todo.findByIdAndUpdate({ _id: id }, {
+//         $set: {
+//             title: req.body.title,
+//             description: req.body.description,
+//             status: req.body.status,
+//             date: req.body.date
+//         }
+//     }, {
+//         new: true,
+//         useFindAndModify: false
+//     }).then((result) => {
+//         res.status(200).send(result)
+//     })
+//         .catch(err => {
+//             res.status(403).json({ message: "may there was an error in your request" })
+//         })
 
 
-})
+// })
 
 // DELETE todo
 route.delete("/:id", async (req, res) => { });
