@@ -16,6 +16,19 @@ route.get('/', async (req, res) => {
         })
 })
 
+//find inactivet
+route.get('/inactivet', async (req, res) => {
+    const todo = new Todo()
+    const data = await todo.findActive('discord')
+
+    try {
+        res.status(200).json(data)
+    }
+    catch (err) {
+        res.status(403).json({ message: "may there was an error in server" })
+    }
+})
+
 //get todo'd by ID
 route.get("/:id", async (req, res) => {
     const id = req.params.id;
@@ -30,9 +43,7 @@ route.get("/:id", async (req, res) => {
 
 // POST doto
 route.post("/", async (req, res) => {
-    console.log(1);
     const newTodo = new Todo(req.body);
-    console.log(2);
 
     await newTodo.save()
         .then(() => {
