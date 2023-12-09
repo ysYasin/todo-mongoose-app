@@ -27,5 +27,11 @@ todoSchema.statics = {
         return this.find({ title: new RegExp(key, 'i') }, { description: new RegExp(key, 'i') })// search by key words in title
     }
 }
+// query methods
+todoSchema.query = {
+    getActive: function (key) {
+        return this.find({ title: new RegExp(key, 'i') })// search by key words in title
+    }
+}
 
 module.exports = todoSchema;
