@@ -10,9 +10,26 @@ route.get('/', (req, res) => {
 })
 
 //get todo'd by ID
-route.get("/", async (req, res) => {
-
-})
+// route.get("/:id", async (req, res) => {
+//     const id = req.params.id;
+//     await Todo.find({ _id: id }, {
+//         $set: {
+//             title: req.body.title,
+//             description: req.body.description,
+//             status: req.body.status,
+//             date: req.body.date
+//         }
+//     }).then(() => {
+//         console.log(3);
+//         res.status(200).json({ message: "successfully updated" })
+//         console.log(4);
+//     })
+//         .catch(err => {
+//             console.log(5);
+//             res.status(403).json({ message: "may there was an error in your request" })
+//             console.log(6);
+//         })
+// })
 
 // POST doto
 route.post("/", async (req, res) => {
@@ -51,25 +68,48 @@ route.post("/all", async (req, res) => {
 });
 
 // PUT todo
+// route.put("/:id", async (req, res) => {
+//     const id = req.params.id;
+//     await Todo.updateOne({ _id: id }, {
+//         $set: {
+//             title: req.body.title,
+//             description: req.body.description,
+//             status: req.body.status,
+//             date: req.body.date
+//         }
+//     }).then(() => {
+//         console.log(3);
+//         res.status(200).json({ message: "successfully updated" })
+//         console.log(4);
+//     })
+//         .catch(err => {
+//             console.log(5);
+//             res.status(403).json({ message: "may there was an error in your request" })
+//             console.log(6);
+//         })
+// })
+
+// findByIdAndUpdate
 route.put("/:id", async (req, res) => {
     const id = req.params.id;
-    await Todo.updateOne({ _id: id }, {
+    await Todo.findByIdAndUpdate({ _id: id }, {
         $set: {
             title: req.body.title,
             description: req.body.description,
             status: req.body.status,
             date: req.body.date
         }
-    }).then(() => {
-        console.log(3);
-        res.status(200).json({ message: "successfully updated" })
-        console.log(4);
+    }, {
+        new: true,
+        useFindAndModify: false
+    }).then((result) => {
+        res.status(200).send(result)
     })
         .catch(err => {
-            console.log(5);
             res.status(403).json({ message: "may there was an error in your request" })
-            console.log(6);
         })
+
+
 })
 
 // DELETE todo

@@ -9,7 +9,7 @@ app.use(express.json());
 // mongoose OBject
 const Uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.kx3y6hq.mongodb.net/?retryWrites=true&w=majority`
 
-mongoose.connect(Uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(Uri)
     .then(() => { console.log('mongoose connected') })
     .catch((err) => { console.log(err) })
 
