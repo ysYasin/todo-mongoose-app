@@ -15,12 +15,17 @@ const todoSchema = mongoose.Schema({
         default: Date.now
     }
 })
-
+// instence methods
 todoSchema.methods = {
     findActive: function (key) {
         return mongoose.model("Todo").find({ title: new RegExp(key, 'i') })// search by key words in title
     }
 }
-
+// static method
+todoSchema.statics = {
+    getByKey: function (key) {
+        return this.find({ title: new RegExp(key, 'i') }, { description: new RegExp(key, 'i') })// search by key words in title
+    }
+}
 
 module.exports = todoSchema;

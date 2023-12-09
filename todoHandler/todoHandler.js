@@ -16,10 +16,23 @@ route.get('/', async (req, res) => {
         })
 })
 
-//find inactivet
+//find by instence mothel method
 route.get('/inactivet', async (req, res) => {
     const todo = new Todo()
     const data = await todo.findActive('discord')
+
+    try {
+        res.status(200).json(data)
+    }
+    catch (err) {
+        res.status(403).json({ message: "may there was an error in server" })
+    }
+})
+
+// find by keyword in static methods
+
+route.get('/klb/:keyword', async (req, res) => {
+    const data = await Todo.getByKey(req.query.keyword)
 
     try {
         res.status(200).json(data)
