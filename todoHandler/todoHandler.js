@@ -36,10 +36,41 @@ route.post("/", async (req, res) => {
 
 // POST multiple TODO's
 
-route.post("/all", async (req, res) => { });
+route.post("/all", async (req, res) => {
+    await Todo.insertMany(req.body)
+        .then(() => {
+            console.log(3);
+            res.status(200).json({ message: "successfully added" })
+            console.log(4);
+        })
+        .catch(err => {
+            console.log(5);
+            res.status(403).json({ message: "may there was an error in your request" })
+            console.log(6);
+        })
+});
 
 // PUT todo
-route.put("/:id", async (req, res) => { })
+route.put("/:id", async (req, res) => {
+    const id = req.params.id;
+    await Todo.updateOne({ _id: id }, {
+        $set: {
+            title: req.body.title,
+            description: req.body.description,
+            status: req.body.status,
+            date: req.body.date
+        }
+    }).then(() => {
+        console.log(3);
+        res.status(200).json({ message: "successfully updated" })
+        console.log(4);
+    })
+        .catch(err => {
+            console.log(5);
+            res.status(403).json({ message: "may there was an error in your request" })
+            console.log(6);
+        })
+})
 
 // DELETE todo
 route.delete("/:id", async (req, res) => { });
