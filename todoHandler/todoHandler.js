@@ -7,7 +7,7 @@ const Todo = new mongoose.model("Todo", todoSchrma);
 
 //GET all the Todos
 route.get('/', async (req, res) => {
-    await Todo.find({ status: "active" }).select({ date: 0, _id: 0, _v: 0 }).limit(1)//.exect()
+    await Todo.find({ status: "active" }).select({ date: 0, _v: 0 }).limit(1)//.exect()
         .then(todos => {
             res.status(200).json(todos)
         })
@@ -17,26 +17,16 @@ route.get('/', async (req, res) => {
 })
 
 //get todo'd by ID
-// route.get("/:id", async (req, res) => {
-//     const id = req.params.id;
-//     await Todo.find({ _id: id }, {
-//         $set: {
-//             title: req.body.title,
-//             description: req.body.description,
-//             status: req.body.status,
-//             date: req.body.date
-//         }
-//     }).then(() => {
-//         console.log(3);
-//         res.status(200).json({ message: "successfully updated" })
-//         console.log(4);
-//     })
-//         .catch(err => {
-//             console.log(5);
-//             res.status(403).json({ message: "may there was an error in your request" })
-//             console.log(6);
-//         })
-// })
+route.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    await Todo.findOne({ _id: id })
+        .then((result) => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            res.status(403).json({ message: "may there was an error in your request or server side" })
+        })
+})
 
 // POST doto
 route.post("/", async (req, res) => {
@@ -120,7 +110,16 @@ route.post("/all", async (req, res) => {
 // })
 
 // DELETE todo
-route.delete("/:id", async (req, res) => { });
+route.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    await Todo.deleteOne({ _id: id })
+        .then((result) => {
+            res.status(200).json({ success: "Todo is Deleted successfully" })
+        })
+        .catch(err => {
+            res.status(403).json({ message: "may there was an error in your request or server side" })
+        })
+});
 
 
 module.exports = route;
