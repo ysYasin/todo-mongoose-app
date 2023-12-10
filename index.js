@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const todoHandler = require('./todoHandler/todoHandler')
+const UserHandler = require('./todoHandler/UserHandler')
+require("dotenv").config()
 const port = process.env.PORT || 4530
 const app = express();
 require("dotenv").config();
@@ -14,6 +16,7 @@ mongoose.connect(Uri)
     .catch((err) => { console.log(err) })
 
 app.use('/todo', todoHandler);
+app.use('/user', UserHandler);
 
 // default error handler
 function errorHandler(err, req, res, next) {
