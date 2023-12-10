@@ -13,6 +13,11 @@ const todoSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    //meking relation between to collections
+    user: {
+        type: mongoose.Schema.Types.ObjectId, // ObjectId isa defarent type of datatype of mongoDB So we called him as a type
+        ref: 'User' // in ref weare refaringthat from which colection we ganna take this ID and make relation with
     }
 })
 // instence methods

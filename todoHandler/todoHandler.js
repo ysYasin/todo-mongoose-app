@@ -1,14 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const todoSchrma = require("../schema/mongooseSchema")
+const userSchema = require("../schema/userSchema")
 const isLogin = require("../middlewares/isLogin")
 const route = express.Router();
 
+const User = new mongoose.model("User", userSchema);
 const Todo = new mongoose.model("Todo", todoSchrma);
 
 //GET all the Todos
 route.get('/', isLogin, async (req, res) => {
-    await Todo.find({ status: "active" }).select({ date: 0, _v: 0 }).limit(1)//.exect()
+    await Todo.find()
+        .populate("user", "name userName -_id") // by this populate mathod we can diclier which element of document we are going to populate then that that will match with id and take al dataa From that relation 
+        .skip(4)                     //.select({ date: 0, _v: 0 }).limit(1)//.exect()
         .then(todos => {
             res.status(200).json(todos)
         })
@@ -69,14 +73,13 @@ route.get("/:lang", async (req, res) => {
 })
 
 // POST doto
-route.post("/", async (req, res) => {
-    const newTodo = new Todo(req.body);
+route.post("/", isLogin, async (req, res) => {
+    const newTodo = new Todo({ ...req.body, user: req.userId }); // we set userId here by is login middleware that hold the userId of User collection when he authenticate jwt token. and user id came to middle ware by jwt token
 
-    await newTodo.save()
+    const data = await newTodo.save()
+    await User.updateOne({ _id: req.userId }, { $push: { todos: data._id } })
         .then(() => {
-            console.log(3);
             res.status(200).json({ message: "successfully added" })
-            console.log(4);
         })
         .catch(err => {
             console.log(5);
@@ -87,7 +90,7 @@ route.post("/", async (req, res) => {
 });
 
 // POST multiple TODO's
-
+// @TODO mpliment relation
 route.post("/all", async (req, res) => {
     await Todo.insertMany(req.body)
         .then(() => {
