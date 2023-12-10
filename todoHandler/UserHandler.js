@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 require("dotenv").config();
-const userSchrma = require("../schema/userSchema")
+const userSchrma = require("../schema/userSchema");
+const isLogin = require('../middlewares/isLogin');
 const route = express.Router();
 
 const User = mongoose.model('User', userSchrma);
@@ -27,7 +28,6 @@ route.post('/signup', async (req, res) => {
 })
 
 //SIGNIN
-console.log(process.env.JWT_SECRET_KEY);
 route.post('/signin', async (req, res) => {
     const user = await User.find({ name: req.body.name });
     try {
@@ -54,6 +54,15 @@ route.post('/signin', async (req, res) => {
     }
 })
 
+route.get("/all", async (req, res) => {
+    try {
+        const data = await User.find().populate("todos", "title status -_id")
+        res.status(200).send(data)
+    }
+    catch (err) {
+        res.status(403).json({ message: "may there was an error in your request or server side" })
+    }
 
+})
 
 module.exports = route;

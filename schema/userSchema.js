@@ -17,9 +17,10 @@ const UserSchema = mongoose.Schema({
     confirmPassword: {
         type: String
     },
-    todos: {
+    todos: [{
         type: mongoose.Types.ObjectId,
         ref: "Todo"
     }
+    ]
 })
 module.exports = UserSchema;
