@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const todoSchrma = require("../schema/mongooseSchema")
+const isLogin = require("../middlewares/isLogin")
 const route = express.Router();
 
 const Todo = new mongoose.model("Todo", todoSchrma);
 
 //GET all the Todos
-route.get('/', async (req, res) => {
+route.get('/', isLogin, async (req, res) => {
     await Todo.find({ status: "active" }).select({ date: 0, _v: 0 }).limit(1)//.exect()
         .then(todos => {
             res.status(200).json(todos)
@@ -17,42 +18,42 @@ route.get('/', async (req, res) => {
 })
 
 //find by instence mothel method
-route.get('/inactivet', async (req, res) => {
-    const todo = new Todo()
-    const data = await todo.findActive('discord')
+// route.get('/inactivet', async (req, res) => {
+//     const todo = new Todo()
+//     const data = await todo.findActive('discord')
 
-    try {
-        res.status(200).json(data)
-    }
-    catch (err) {
-        res.status(403).json({ message: "may there was an error in server" })
-    }
-})
+//     try {
+//         res.status(200).json(data)
+//     }
+//     catch (err) {
+//         res.status(403).json({ message: "may there was an error in server" })
+//     }
+// })
 
 // find by keyword in static methods
 
-route.get('/klb/:keyword', async (req, res) => {
-    const data = await Todo.getByKey(req.query.keyword)
+// route.get('/klb/:keyword', async (req, res) => {
+//     const data = await Todo.getByKey(req.query.keyword)
 
-    try {
-        res.status(200).json(data)
-    }
-    catch (err) {
-        res.status(403).json({ message: "may there was an error in server" })
-    }
-})
+//     try {
+//         res.status(200).json(data)
+//     }
+//     catch (err) {
+//         res.status(403).json({ message: "may there was an error in server" })
+//     }
+// })
 
 // get by keywort === @TODO Explaining query helper method
-route.get('/klb/:keyword', async (req, res) => {
-    const data = await Todo.getByKey(req.query.keyword)
+// route.get('/klb/:keyword', async (req, res) => {
+//     const data = await Todo.getByKey(req.query.keyword)
 
-    try {
-        res.status(200).json(data)
-    }
-    catch (err) {
-        res.status(403).json({ message: "may there was an error in server" })
-    }
-})
+//     try {
+//         res.status(200).json(data)
+//     }
+//     catch (err) {
+//         res.status(403).json({ message: "may there was an error in server" })
+//     }
+// })
 
 //get todo'd by ID
 route.get("/:lang", async (req, res) => {
